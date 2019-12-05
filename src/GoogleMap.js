@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { refresh } from "./index";
+
 import {
   Map,
   Polyline,
@@ -14,47 +14,38 @@ const MapContainer = props => {
 
   const [showingInfoWindow, setShowingInfoWindow] = useState(false);
 
-  // const inputPile = [];
+  const [path, setPath] = useState(undefined);
 
   const onMarkerClick = (props, marker, e) => {
     setActiveMarker(marker);
     setShowingInfoWindow(true);
   };
-  function initMap() {
+
+  async function initMap() {
     const url = "http://localhost:8080/map/init";
-    return fetch(url)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        // console.log("data", data.polyline)
-        return data.polyline;
-      });
+    const response = await fetch(url);
+    const data = await response.json();
+    const polyline = [];
+
+    Object.keys(data).map(key => 
+    polyline.push(<Polyline
+        key = {key}
+        path={data[key]}
+        strokeColor="red"
+        strokeOpacity={0.2}
+        strokeWeight={5}
+      />)
+    );
+    return polyline;
   }
 
-  const path = [];
+  !path && initMap().then(path => {
+    setPath(path)
+  })
+
   const onMapClick = (props, e, latLng) => {
-    path.push({ lat: latLng.latLng.lat(), lng: latLng.latLng.lng() });
-    const url =
-      "http://localhost:8080/map/insert" +
-      "/" +
-      latLng.latLng.lat() +
-      "/" +
-      latLng.latLng.lng();
-    fetch(url).then(refresh);
     console.log(path);
-
-    // console.log("{ lat: ", latLng.latLng.lat(), ", lng: ",latLng.latLng.lng(), " },");
   };
-
-  // inputPile.push(
-  //   <Polyline
-  //       path={initMap()}
-  //       strokeColor="red"
-  //       strokeOpacity={0.2}
-  //       strokeWeight={5}
-  //     />
-  // );
 
   return (
     <Map
@@ -66,13 +57,8 @@ const MapContainer = props => {
       }}
       zoom={14}
     >
-      <Polyline
-        id={1}
-        path={path}
-        strokeColor="red"
-        strokeOpacity={0.2}
-        strokeWeight={5}
-      />
+    {path}
+      
       <InfoWindow marker={activeMarker} visible={showingInfoWindow}>
         <div>
           <h1>{"车 1"}</h1>
