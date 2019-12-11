@@ -44,20 +44,36 @@ const MapContainer = props => {
   })
 
   const onMapClick = (props, e, latLng) => {
-    console.log(path);
+    const url =
+      "http://localhost:8080/map/insert" +
+      "/" +
+      latLng.latLng.lat() +
+      "/" +
+      latLng.latLng.lng();
+    fetch(url);
   };
 
   return (
+    // <Map
+    //   onClick={onMapClick}
+    //   google={props.google}
+    //   initialCenter={{
+    //     lat: 35.677832,
+    //     lng: 139.767507
+    //   }}
+    //   zoom={12}
+    // >
     <Map
       onClick={onMapClick}
       google={props.google}
       initialCenter={{
-        lat: 35.686823,
-        lng: 139.864091
+        lat: 35.642290, 
+        lng: 139.810148
       }}
-      zoom={14}
+      zoom={12}
     >
-    {path}
+
+      {path} 
       
       <InfoWindow marker={activeMarker} visible={showingInfoWindow}>
         <div>
@@ -67,15 +83,22 @@ const MapContainer = props => {
 
       <Marker
         onClick={onMarkerClick}
-        name={"No1"}
-        style={{ transform: "rotate(90deg)" }}
-        icon={{
-          url: icon,
-          anchor: new props.google.maps.Point(10, 10),
-          scaledSize: new props.google.maps.Size(10, 10)
-        }}
+        name={"中田屋船堀工場"}
         position={{ lat: 35.686823, lng: 139.864091 }}
       />
+
+      <Marker
+        onClick={onMarkerClick}
+        name={"墨田リサイクル事業協同組合"}
+        position={{ lat: 35.711594, lng: 139.815657 }}
+      />
+
+      <Marker
+        onClick={onMarkerClick}
+        name={"Koyo Service Tokyo Branch"}
+        position={{ lat: 35.642290, lng: 139.810148 }}
+      />
+        
     </Map>
   );
 };
