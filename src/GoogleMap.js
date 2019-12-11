@@ -27,21 +27,24 @@ const MapContainer = props => {
     const data = await response.json();
     const polyline = [];
 
-    Object.keys(data).map(key => 
-    polyline.push(<Polyline
-        key = {key}
-        path={data[key]}
-        strokeColor="red"
-        strokeOpacity={0.2}
-        strokeWeight={5}
-      />)
+    Object.keys(data).map(key =>
+      polyline.push(
+        <Polyline
+          key={key}
+          path={data[key]}
+          strokeColor="red"
+          strokeOpacity={0.2}
+          strokeWeight={5}
+        />
+      )
     );
     return polyline;
   }
 
-  !path && initMap().then(path => {
-    setPath(path)
-  })
+  !path &&
+    initMap().then(path => {
+      setPath(path);
+    });
 
   const onMapClick = (props, e, latLng) => {
     const url =
@@ -67,14 +70,13 @@ const MapContainer = props => {
       onClick={onMapClick}
       google={props.google}
       initialCenter={{
-        lat: 35.642290, 
-        lng: 139.810148
+        lat: 35.68022,
+        lng: 139.783869
       }}
       zoom={12}
     >
+      {path}
 
-      {path} 
-      
       <InfoWindow marker={activeMarker} visible={showingInfoWindow}>
         <div>
           <h1>{"车 1"}</h1>
@@ -96,13 +98,18 @@ const MapContainer = props => {
       <Marker
         onClick={onMarkerClick}
         name={"Koyo Service Tokyo Branch"}
-        position={{ lat: 35.642290, lng: 139.810148 }}
+        position={{ lat: 35.64229, lng: 139.810148 }}
       />
-        
+
+      <Marker
+        onClick={onMarkerClick}
+        name={"Komagata"}
+        position={{ lat: 35.68022, lng: 139.783869 }}
+      />
     </Map>
   );
 };
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyCcZQWDPZSFi8TMjV64U_63QiqvsQtmI_E"
+  apiKey: "AIzaSyAchwZSKeWtyND-bY7YO2jjDezevzRg33E"
 })(MapContainer);
