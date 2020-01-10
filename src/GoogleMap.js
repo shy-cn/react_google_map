@@ -54,8 +54,7 @@ const MapContainer = props => {
         <Polyline
           key={key}
           path={data[key]}
-          // strokeColor={color[temp++ % color.length]}
-          strokeColor="red"
+          strokeColor={color[temp++ % color.length]}
           strokeOpacity={0.4}
           strokeWeight={5}
         />
@@ -70,17 +69,10 @@ const MapContainer = props => {
     });
 
   const onMapClick = (props, e, latLng) => {
-    const url = "http://10.1.130.206:8080/map/insert";
-    var latLngDto = JSON.stringify({
-      lat: latLng.latLng.lat(),
-      lng: latLng.latLng.lng()
-    });
-    fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: latLngDto
-    });
+    if (showingInfoWindow) {
+      setShowingInfoWindow(false);
+      setActiveMarker(null);
+    }
   };
 
   return (
@@ -88,10 +80,10 @@ const MapContainer = props => {
       onClick={onMapClick}
       google={props.google}
       initialCenter={{
-        lat: 35.677832,
-        lng: 139.767507
+        lat: 35.639032,
+        lng: 139.807507
       }}
-      zoom={11}
+      zoom={12}
     >
       {path}
 
