@@ -7,7 +7,7 @@ import {
   GoogleApiWrapper,
   InfoWindow
 } from "google-maps-react";
-import icon from "./icon.png";
+import arrow from "./arrow.png";
 
 const MapContainer = props => {
   const [activeMarker, setActiveMarker] = useState(undefined);
@@ -21,19 +21,36 @@ const MapContainer = props => {
     setShowingInfoWindow(true);
   };
 
+  const color = [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "purple",
+    "black",
+    "white",
+    "Orange",
+    "magenta",
+    "chocolate",
+    "beige",
+    "salmon",
+    "tan",
+    "navyblue"
+  ];
   async function initMap() {
     const url = "http://localhost:8080/map/init";
     const response = await fetch(url);
     const data = await response.json();
     const polyline = [];
-
+    var temp = 0;
     Object.keys(data).map(key =>
       polyline.push(
         <Polyline
           key={key}
           path={data[key]}
+          // strokeColor={color[temp++ % color.length]}
           strokeColor="red"
-          strokeOpacity={0.2}
+          strokeOpacity={0.4}
           strokeWeight={5}
         />
       )
@@ -47,13 +64,17 @@ const MapContainer = props => {
     });
 
   const onMapClick = (props, e, latLng) => {
-    const url =
-      "http://localhost:8080/map/insert" +
-      "/" +
-      latLng.latLng.lat() +
-      "/" +
-      latLng.latLng.lng();
-    fetch(url);
+    const url = "http://10.1.130.206:8080/map/insert";
+    var latLngDto = JSON.stringify({
+      lat: latLng.latLng.lat(),
+      lng: latLng.latLng.lng()
+    });
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: latLngDto
+    });
   };
 
   return (
@@ -70,16 +91,16 @@ const MapContainer = props => {
       onClick={onMapClick}
       google={props.google}
       initialCenter={{
-        lat: 35.68022,
-        lng: 139.783869
+        lat: 35.589399,
+        lng: 139.72944
       }}
-      zoom={12}
+      zoom={15}
     >
       {path}
 
       <InfoWindow marker={activeMarker} visible={showingInfoWindow}>
         <div>
-          <h1>{"车 1"}</h1>
+          <h1>{Marker.name}</h1>
         </div>
       </InfoWindow>
 
@@ -106,10 +127,16 @@ const MapContainer = props => {
         name={"Komagata"}
         position={{ lat: 35.68022, lng: 139.783869 }}
       />
+
+      <Marker
+        onClick={onMarkerClick}
+        name={"株式会社リサイクル・ネットワーク"}
+        position={{ lat: 35.589399, lng: 139.72944 }}
+      />
     </Map>
   );
 };
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyAchwZSKeWtyND-bY7YO2jjDezevzRg33E"
+  apiKey: "AIzaSyCcZQWDPZSFi8TMjV64U_63QiqvsQtmI_E"
 })(MapContainer);
