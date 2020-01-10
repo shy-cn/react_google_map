@@ -38,7 +38,7 @@ const MapContainer = props => {
     "navyblue"
   ];
   async function initMap() {
-    const url = "http://localhost:8080/map/init";
+    const url = "http://10.1.130.206:8080/map/init";
     const response = await fetch(url);
     const data = await response.json();
     const polyline = [];
