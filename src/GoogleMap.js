@@ -38,8 +38,14 @@ const MapContainer = props => {
     "navyblue"
   ];
   async function initMap() {
-    const url = "http://10.1.130.206:8080/map/init";
-    const response = await fetch(url);
+    const url = "http://localhost:8080/map/init";
+    const response = await fetch(url, {
+      method: "get",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
     const data = await response.json();
     const polyline = [];
     var temp = 0;
@@ -78,23 +84,14 @@ const MapContainer = props => {
   };
 
   return (
-    // <Map
-    //   onClick={onMapClick}
-    //   google={props.google}
-    //   initialCenter={{
-    //     lat: 35.677832,
-    //     lng: 139.767507
-    //   }}
-    //   zoom={12}
-    // >
     <Map
       onClick={onMapClick}
       google={props.google}
       initialCenter={{
-        lat: 35.589399,
-        lng: 139.72944
+        lat: 35.677832,
+        lng: 139.767507
       }}
-      zoom={15}
+      zoom={11}
     >
       {path}
 
